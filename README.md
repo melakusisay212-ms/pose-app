@@ -2,34 +2,25 @@
 
 A game you control with your body: lean left and right, jump, and slide, tracked by the phone's front camera. Plan: see the build plan doc.
 
-## Status: Session 2 (pose go / no-go), crash-diagnostic build
+## Status: Session 1 (project skeleton and build)
 
-The first Session 2 build installed but closed right after opening on the Android 13 Go test phone. This build finds out why. The app now opens on a test list that never touches the camera, and each test adds one more risky part:
+What exists: a Flutter app that opens the front camera and shows the preview with the camera's details (sensor orientation, preview size). Flame is installed but not used yet.
 
-1. Camera preview only (NV21 format).
-2. Camera + receiving frames (no pose model).
-3. Camera + ML Kit pose + skeleton + 60 second speed test (the real Session 2 test).
+Pass check: the APK installs on the phone, asks for camera permission, and shows you on screen.
 
-Every step writes a line to a log file on the phone, flushed to disk at once. If the app crashes, reopen it: the log on the test list shows the last step that started.
+## First-time setup (once)
 
-Pass check for Session 2 (see the plan doc):
-- Skeleton follows you correctly. Raise your LEFT hand and the dots on the LEFT side of the screen must move (the screen acts like a mirror).
-- The 60 second test passes: average at least 15 FPS and no second below 10 FPS. These numbers are our starting choice.
+1. Create a GitHub repository with a `main` branch (add a README so it is not empty).
+2. In the repo, choose Add file, Create new file. Name it `.github/workflows/build.yml` and paste in the contents of the `build.yml` file that came with this project. Commit.
+3. Add file, Upload files. Upload `pose_runner_s1.zip` to the repo root and commit.
 
-Session 1 (camera opens) passed on the test phone.
+## Every time after
 
-## Files
+Upload a zip to the repo root. The workflow unpacks it over the repo, deletes the zip, and builds. A zip may hold the whole project or only the changed files; files not in the zip stay as they are. Keep the folder layout inside the zip (for example `lib/main.dart`). A zip whose only top-level folder contains `pubspec.yaml` is unwrapped automatically. The zip never changes `.github/`.
 
-- `lib/main.dart`: starts the log and the app.
-- `lib/diag/breadcrumbs.dart`: the crash-surviving log.
-- `lib/screens/`: test list, camera probe (tests 1 and 2), pose test (test 3).
-- `lib/pose/`: pose models, camera-frame maths, ML Kit source, skeleton drawing, speed test logic.
-- `lib/camera_status.dart`: camera start-up helpers from Session 1.
-- `test/`: unit tests for the pure logic (maths, FPS counting, speed test rules).
+## Get the APK
 
-## Build and install
-
-Upload the session zip to the repo root without unzipping it. The workflow unpacks it over the repo, deletes the zip, and builds. A zip may hold only the changed files. Then: Actions tab, latest run, Artifacts, download `pose-runner-apk`, unzip it, install `app-release.apk` over the old app.
+Repo, Actions tab, open the latest run, scroll to Artifacts, download `pose-runner-apk`. It is a zip containing `app-release.apk`: unzip it in your Files app and open the APK. Allow "install unknown apps" for your browser or Files app if Android asks.
 
 ## Notes
 
